@@ -1,3 +1,4 @@
 data/
 Pipfile.lock
 .*/
+tests/__pycache__/
