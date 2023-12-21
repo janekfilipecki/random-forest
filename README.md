@@ -160,21 +160,49 @@ wersję algorytmu, która będzie w stanie obsłużyć atrybuty kategoryczne
 jak i ciągłe oraz będzie posiadać opcję przycinania drzewa, czyli de
 facto będzie swoistą wersją algorytmu C4.5.
 
-### Indeks Giniego
+CART
+---
 
-W algorytmie CART jako kryterium wyboru atrybutu stosowany jest
+Algorytm CART jest bardzo podobny w działaniu do algorytmów opisanych wyżej. Podstawową różnicą w działaniu jest to, że w algorytmie CART jako kryterium wyboru atrybutu stosowany jest
 współczynnik Giniego. Najlepszy podział cechuje się najmniejszą
 wartością miary różnorodności, czyli sytuacją, w której po podziale
 zróżnicowanie klas w podzbiorach było jak najmniejsze (współczynnik
 Giniego przyjmuje najmniejszą wartość).
 
+Indeks Giniego opisuje prawdopodobieństwo wybrania niepoprawnej klasy po wybraniu losowego elementu ze zbioru, ma wobec tego minimalną wartość (najwyższy poziom czystości) 0, oraz maksymalną 0,5. Jeśli Indeks Giniego wynosi 0,5, oznacza to losowy przydział klas. Entropia z kolei jest miarą niepewności i losowości w zbiorze, jest ona miarą logarytmiczną, a indeks Giniego jest miarą liniową.
+
+Efektem tych różnic są różne niuanse sprawiające że miary te zachowują się inaczej w zastosowaniu dla drzew decyzyjnych. Indeks Giniego jest bardziej czuły na rozkład klas, a entropia na ich ilość. Obliczanie indeksu Giniego ma także mniejszą złożoność obliczeniową, przez jego liniowy charakter. Entropia uważana jest jednak za mniej czułą miarą, w porównianiu do IG. Co warto również zaznaczyć, Ig częściej wybiera podziały, których rezultatem są zbiory o zbalansowanych ilościach klas, podczas gdy Entropia częściej wybiera podziały, dla których największa jest redukcja zaszumienia.
+
+Nie ma jednego wygranego w tej bitwie, oba sposoby obliczania odpowiednich podziałów są dobre i znajdują swoje zastosowania. Przejdźmy jednak dalej do opisu Indeksu Giniego.
+
+
+**Indeks Giniego**
+
 $$I_G(A) = 1 - \sum_{k=1}^{K}p_k^2$$ 
 $$p_k = \frac{N_{A,k}}{N_A}$$
 Gdzie:
 
-$N_{A,k}$ - Liczba przykładów w zbiorze A z klasą k
+$N_{A,k}$ - Liczba przykładów w zbiorze $A$ z klasą $k$
 
-$N_A$ - Liczba wszystkich przykłady ze zbioru A
+$N_A$ - Liczba wszystkich przykłady ze zbioru $A$
+
+
+Na podstawie właśnie tej miary CART znajduje odpowiednie podziały, poniżej znajduje się pseudokod algorytmu CART, który jest bardzo podobny do ID3, jednak zawiera kilka kluczowych różnic.
+
+
+    1. Znajdź możliwe podziały dla każdego atrybutu
+    2. Dla tych par atrybutów i podziałów oblicz Ig
+    3. Wybierz najlepszą parę
+    4. Na podstawie wybranych podziałów stwórz nowe węzły
+    5. Dla potomnych węzłów usuń wybrany poprzednio atrybut 
+    6. Dla każdego poddrzewa wykonaj kroki od 1.
+    7. W każdej iteracji jeden atrybut jest usuwany. Algorytm zatrzymuje się, 
+       gdy do rozpatrzenia nie pozostanie juz żaden atrybut, wszystkie przykłady 
+       w danym podrzewie mają tą samą wartość atrybutu decyzyjnego, osiągnięto maksymalną zadaną głębokość drzewa lub ilość przykładów w podzbiorach po podziale byłaby zbyt mała.
+
+Pseudokod algorytmu CART
+
+
 
 Las losowy
 ----------
