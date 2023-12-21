@@ -1,5 +1,5 @@
 import pytest
-import source.cart
+import source.random_forest
 
 
 def test_assert_true():
