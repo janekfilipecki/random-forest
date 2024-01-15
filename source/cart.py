@@ -15,8 +15,9 @@ class CART:
         split_search_density: int = 10,
         min_impurity_treshold: float = 0,
     ):
-        """This class represents a CART decision tree. It is a control class
-        that uses the Node class to build a decision tree and perform predictions.
+        """This class represents a CART decision tree. It is a control
+        class that uses the Node class to build a decision tree and perform
+        predictions.
 
         Hyperparameters:
             - max_depth: The maximum depth of the tree for pruing purposes. By
@@ -159,9 +160,26 @@ class Node:
         # The gini impurity treshold for pruing purposes
         self._min_impurity_treshold: float = min_impurity_treshold
 
-    def __repr__(self, path="") -> str:
+    def __repr__(self) -> str:
         """This method represents the object as a string."""
-        pass
+        tabs = f"|    " * self._depth
+        output = tabs
+        if self._left_child and self._right_child:
+            output += "Feature: " + self._current_split_feature + "\n"
+            if self._current_split_feature_is_categorical:
+                output += tabs + "== " + str(self._current_split_value) + "\n"
+                output += repr(self._left_child)
+                output += tabs + "!= " + str(self._current_split_value) + "\n"
+                output += repr(self._right_child)
+            else:
+                output += tabs + "<= " + str(self._current_split_value) + "\n"
+                output += repr(self._left_child)
+                output += tabs + "> " + str(self._current_split_value) + "\n"
+                output += repr(self._right_child)
+        else:
+            output += "Label: " + str(self._leaf_label) + "\n"
+
+        return output
 
     def _grow_leaf(self) -> None:
         """This method sets the label of the leaf node to the most common value
@@ -195,9 +213,9 @@ class Node:
         for value in subset[self._target_feature].unique():
             # Calculate the amount of rows that have the value
             # in the target feature
-            value_appearances = subset[
-                subset[self._target_feature] == value
-            ].shape[0]
+            value_appearances = subset[subset[self._target_feature] == value].shape[
+                0
+            ]
             # Calculate the probability of the value appearing
             value_probability = value_appearances / subset_size
             # Subtract the probability squared from the gini impurity,
