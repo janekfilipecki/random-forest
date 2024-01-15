@@ -23,11 +23,13 @@ class CART:
             - max_depth: The maximum depth of the tree for pruing purposes. By
                 default it is set to infinity, meaning that the tree will grow
                 until all end conditions are met.
-            - min_rows: The minimum amount of rows that a node must have in order
-                to be able to split. 2 by default.
-            - split_search_density: The density of the split search. The higher the density, the more
-                splits will be calculated. 10 by default.
-            - min_impurity_treshold=: The gini impurity treshold for pruing purposes. The
+            - min_rows: The minimum amount of rows that a node must have in
+            order to be able to split. 2 by default.
+            - split_search_density: The density of the split search. The
+                higher the density, the more splits will be calculated. 10 by
+                default.
+            - min_impurity_treshold=: The gini impurity treshold for pruing
+                purposes. The
                 impurity pruning is off by default.
 
         Example:
@@ -162,7 +164,7 @@ class Node:
 
     def __repr__(self) -> str:
         """This method represents the object as a string."""
-        tabs = f"|    " * self._depth
+        tabs = "|    " * self._depth
         output = tabs
         if self._left_child and self._right_child:
             output += "Feature: " + self._current_split_feature + "\n"
@@ -190,7 +192,8 @@ class Node:
         Raises:
             TODO
         """
-        # Set the label of the node to the most common value of the target feature
+        # Set the label of the node to the most common value of the target
+        # feature
         self._leaf_label = self._data[self._target_feature].mode()[0]
 
     def _gini(self, subset: pd.DataFrame) -> float:
@@ -213,9 +216,9 @@ class Node:
         for value in subset[self._target_feature].unique():
             # Calculate the amount of rows that have the value
             # in the target feature
-            value_appearances = subset[subset[self._target_feature] == value].shape[
-                0
-            ]
+            value_appearances = subset[
+                subset[self._target_feature] == value
+            ].shape[0]
             # Calculate the probability of the value appearing
             value_probability = value_appearances / subset_size
             # Subtract the probability squared from the gini impurity,
@@ -231,12 +234,14 @@ class Node:
         split value.
 
         Args:
-            split_feature (str): The feature that will be used to split the data
-            split_value (str or float): The value that will be used to split the data
-                If the feature is categoricalso we will split the data into
-                two subsets, one for the chosen feature and the other for all
-                other values. In case of a categorical feature, the left child will be the one
-                that contains the chosen split value.
+            split_feature (str): The feature that will be used to split the
+                data
+            split_value (str or float): The value that will be used to split
+                the data. If the feature is categoricalso we will split the
+                data into two subsets, one for the chosen feature and the
+                other for all other values. In case of a categorical feature,
+                the left child will be the one that contains the chosen split
+                value.
 
         Returns:
             (list) A list of subsets of the nodes data
@@ -258,16 +263,17 @@ class Node:
     def _get_splits(self) -> typing.List[typing.Tuple[str, bool, object]]:
         """Get the possible splits of the nodes data.
         Getting the possible splits is very expensive. A better implementation
-        would be to calculate the gini impurity while iterating through the numerical
-        features (it doesnt change anything for categorical features).
-        This would require a different implementation of the _gini method and
-        the code would be way less readable, thus we decided to keep it this way.
+        would be to calculate the gini impurity while iterating through the
+        numerical features (it doesnt change anything for categorical
+        features). This would require a different implementation of the _gini
+        method and the code would be way less readable, thus we decided to
+        keep it this way.
 
         Args:
             None
         Returns:
-            (list(tuple(str, bool, str or float))) A list of tuples containing the
-                split feature and split value
+            (list(tuple(str, bool, str or float))) A list of tuples containing
+                the split feature and split value
         Raises:
             TODO
         """
@@ -286,14 +292,14 @@ class Node:
                     splits.append((feature, is_categorical, split_value))
             # If the feature is numerical
             else:
-                # Here is the tricky part. We can assume that splitting the data
-                # in every possible value of the feature will give us the best
-                # split, that is by every integer between the minimum and maximum.
-                # However, this is not true. The best split might be in a value
-                # that is not an integer. So we will split the data by creating
-                # an evenly spaced array of a fixed size and then we will calculate
-                # the gini impurity for each value in the array. This value is
-                # a hyperparameter.
+                # Here is the tricky part. We can assume that splitting the
+                # data in every possible value of the feature will give us
+                # the best split, that is by every integer between the minimum
+                #  and maximum. However, this is not true. The best split
+                #  might be in a value that is not an integer. So we will
+                #  split the data by creating an evenly spaced array of a
+                # fixed size and then we will calculate the gini impurity
+                # for each value in the array. This value is a hyperparameter.
                 max_value = self._data[feature].max()
                 min_value = self._data[feature].min()
                 split_values = np.linspace(
@@ -308,9 +314,9 @@ class Node:
         """This function represents calculating the gini impurity of a split,
         but we won't be subtracting the gini impurity of the subsets from the
         gini impurity of the parent node, since we are only interested in the
-        gini impurity of the subsets. The lower the gini impurity of the subsets,
-        the better the split. So this function will effectively only return a weighted
-        average of the gini impurities of the subsets.
+        gini impurity of the subsets. The lower the gini impurity of the
+        subsets, the better the split. So this function will effectively
+        only return a weighted average of the gini impurities of the subsets.
 
         Args:
             subsets (list(pd.DataFrame)): The subsets of the nodes data
@@ -369,7 +375,8 @@ class Node:
             # If the max depth is reached
             self._depth >= self._max_depth
             or
-            # If the gini impurity of the parent is less than a certain treshold
+            # If the gini impurity of the parent is less than a certain
+            # treshold
             (
                 self._parent_split_impurity is not None
                 and self._parent_split_impurity < self._min_impurity_treshold
@@ -450,9 +457,9 @@ class Node:
         self._right_child._grow()
 
     def _predict(self, row: pd.Series) -> object:
-        """This method provides the logic to predict a row's class. It will return
-        either call upon children nodes or return the most common value of the target
-        feature.
+        """This method provides the logic to predict a row's class. It will
+        return either call upon children nodes or return the most common
+        value of the target feature.
 
         Args:
             row (pd.Series): The row that the prediction will be made on
