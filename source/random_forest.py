@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from cart import CART
+from sklearn.metrics import accuracy_score
 
 def bootstrap_data(data):
     print(len(data))
@@ -16,35 +17,30 @@ def bootstrap_data(data):
     data_copy = data.copy(deep=True)
     data_bootstrap = data_copy.drop(oob_indices)
     # data_bootstrap = data.iloc[bootstrap_indices].values
-    print("data : " + str(data_copy))
-    print("data_bootstrap :" + str(data_bootstrap))
+    # print("data : " + str(data_copy))
+    # print("data_bootstrap :" + str(data_bootstrap))
     return data_bootstrap
 
 
-nr_trees = 10
+tree_limit = 10
 data = pd.read_csv('../datasets/Parkinsson_disease.csv')
 data = data.drop(['name'], axis=1)
 cart = CART(split_search_density=5)
 
 
+results = pd.DataFrame({})
 
-
-for i in range (0, 1):
+for i in range (0, tree_limit):
     cart.fit(bootstrap_data(data), 'status', [])
-    data['predictions'] = data.apply(cart.predict, axis=1)
-    print(data)
+    # print(cart.predict)
+    results[i] = data.apply(cart.predict, axis=1)
+    print(results)
+    # print(data)
 
 
-# data['predictions'] = data.apply(cart.predict, axis=1)
-# accuracy_score(data['status'], data['predictions'])
-# data.head()
-
-
-
-
-
-# TODO
-# In a loop, where n = 10?
-# Bootstrap the data -> select 2/3, 1/3 could be used for error prediction
-# Train a tree on the bootstrapped data, get a prediction
-# Array of predictions -> Get the most voted class
+# tutaj average i konkatenacja do 1 kolumny
+results['mean']=results.mean(axis=1)
+results['round_up']=results.mean(axis=1).round()
+print(results)
+print("ACC SCORE after voting: ")
+print(accuracy_score(data['status'], results['round_up']))
