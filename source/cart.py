@@ -7,13 +7,14 @@ from operator import xor
 
 
 class CART:
-    def __init__(self,
-                 #  HYPERPARAMETERS
-                 max_depth: int = math.inf,
-                 min_rows: int = 2,
-                 split_search_density: int = 10,
-                 min_impurity_treshold: float = 0,
-                 ):
+    def __init__(
+        self,
+        #  HYPERPARAMETERS
+        max_depth: int = math.inf,
+        min_rows: int = 2,
+        split_search_density: int = 10,
+        min_impurity_treshold: float = 0,
+    ):
         """This class represents a CART decision tree. It is a control class
         that uses the Node class to build a decision tree and perform predictions.
 
@@ -25,7 +26,7 @@ class CART:
                 to be able to split. 2 by default.
             - split_search_density: The density of the split search. The higher the density, the more
                 splits will be calculated. 10 by default.
-            - min_impurity_treshold=: The gini impurity treshold for pruing purposes. The 
+            - min_impurity_treshold=: The gini impurity treshold for pruing purposes. The
                 impurity pruning is off by default.
 
         Example:
@@ -42,6 +43,18 @@ class CART:
         # The root node of the tree, set up when calling the fit method
         self._root: Node = None
 
+    def __repr__(self) -> str:
+        """This method represents the object as a string.
+
+        Args:
+            None
+        Returns:
+            (str) A string representation of the object
+        Raises:
+            None
+        """
+        return repr(self._root)
+
     def fit(self, data, target_feature, categorical_features):
         """This method builds the decision tree using the Node class.
 
@@ -53,18 +66,20 @@ class CART:
             TODO
         """
         # Create the root node
-        self._root = Node(data=data,
-                          target_feature=target_feature,
-                          categorical_features=categorical_features,
-                          max_depth=self._max_depth,
-                          min_rows=self._min_rows,
-                          split_search_density=self._split_search_density,
-                          min_impurity_treshold=self._min_impurity_treshold)
+        self._root = Node(
+            data=data,
+            target_feature=target_feature,
+            categorical_features=categorical_features,
+            max_depth=self._max_depth,
+            min_rows=self._min_rows,
+            split_search_density=self._split_search_density,
+            min_impurity_treshold=self._min_impurity_treshold,
+        )
 
         # Grow the root node
         self._root._grow()
 
-    def predict(self, row):
+    def predict(self, row) -> object:
         """This method predicts the class of a row.
 
         Args:
@@ -78,18 +93,19 @@ class CART:
 
 
 class Node:
-    def __init__(self,
-                 data: pd.DataFrame,
-                 target_feature: str,
-                 categorical_features: typing.List[str],
-                 depth: int = 0,
-                 parent_split_impurity: float = None,
-                 #  HYPERPARAMETERS
-                 max_depth: int = math.inf,
-                 min_rows: int = 2,
-                 split_search_density: int = 10,
-                 min_impurity_treshold: float = 0,
-                 ):
+    def __init__(
+        self,
+        data: pd.DataFrame,
+        target_feature: str,
+        categorical_features: typing.List[str],
+        depth: int = 0,
+        parent_split_impurity: float = None,
+        #  HYPERPARAMETERS
+        max_depth: int = math.inf,
+        min_rows: int = 2,
+        split_search_density: int = 10,
+        min_impurity_treshold: float = 0,
+    ):
         """This class represents a node in a decision tree. It provides
         an necessary logic to build a decision tree and perform predictions.
 
@@ -143,7 +159,11 @@ class Node:
         # The gini impurity treshold for pruing purposes
         self._min_impurity_treshold: float = min_impurity_treshold
 
-    def _grow_leaf(self):
+    def __repr__(self, path="") -> str:
+        """This method represents the object as a string."""
+        pass
+
+    def _grow_leaf(self) -> None:
         """This method sets the label of the leaf node to the most common value
         Args:
             None
@@ -155,7 +175,7 @@ class Node:
         # Set the label of the node to the most common value of the target feature
         self._leaf_label = self._data[self._target_feature].mode()[0]
 
-    def _gini(self, subset: pd.DataFrame):
+    def _gini(self, subset: pd.DataFrame) -> float:
         """Calculate the gini impurity of a subset of the nodes data.
 
         Args:
@@ -175,17 +195,20 @@ class Node:
         for value in subset[self._target_feature].unique():
             # Calculate the amount of rows that have the value
             # in the target feature
-            value_appearances = subset[subset[self._target_feature]
-                                       == value].shape[0]
+            value_appearances = subset[
+                subset[self._target_feature] == value
+            ].shape[0]
             # Calculate the probability of the value appearing
             value_probability = value_appearances / subset_size
             # Subtract the probability squared from the gini impurity,
             # as per the formula
-            gini -= value_probability ** 2
+            gini -= value_probability**2
 
         return gini
 
-    def _get_subsets(self, split_feature: str, is_categorical: bool, split_value: object):
+    def _get_subsets(
+        self, split_feature: str, is_categorical: bool, split_value: object
+    ) -> typing.List[pd.DataFrame]:
         """Get the subsets of the nodes data based on the split feature and
         split value.
 
@@ -214,13 +237,13 @@ class Node:
             right_subset = self._data[self._data[split_feature] > split_value]
             return [left_subset, right_subset]
 
-    def _get_splits(self):
+    def _get_splits(self) -> typing.List[typing.Tuple[str, bool, object]]:
         """Get the possible splits of the nodes data.
         Getting the possible splits is very expensive. A better implementation
         would be to calculate the gini impurity while iterating through the numerical
-        features (it doesnt change anything for categorical features). 
-        This would require a different implementation of the _gini method and 
-        the code would be way less readable, thus we decided to keep it this way. 
+        features (it doesnt change anything for categorical features).
+        This would require a different implementation of the _gini method and
+        the code would be way less readable, thus we decided to keep it this way.
 
         Args:
             None
@@ -256,13 +279,14 @@ class Node:
                 max_value = self._data[feature].max()
                 min_value = self._data[feature].min()
                 split_values = np.linspace(
-                    min_value, max_value, self._split_search_density)
+                    min_value, max_value, self._split_search_density
+                )
                 for split_value in split_values:
                     splits.append((feature, is_categorical, split_value))
 
         return splits
 
-    def _rate_split(self, subsets: typing.List[pd.DataFrame]):
+    def _rate_split(self, subsets: typing.List[pd.DataFrame]) -> float:
         """This function represents calculating the gini impurity of a split,
         but we won't be subtracting the gini impurity of the subsets from the
         gini impurity of the parent node, since we are only interested in the
@@ -283,12 +307,13 @@ class Node:
             # Calculate the gini impurity of the subset and multiply it by the
             # size of the subset divided by the size of the nodes data
             # effectively getting the weighted average of the gini impurities
-            weighted_gini += self._gini(subset) * \
-                subset.shape[0] / self._data.shape[0]
+            weighted_gini += (
+                self._gini(subset) * subset.shape[0] / self._data.shape[0]
+            )
 
         return weighted_gini
 
-    def _grow(self):
+    def _grow(self) -> None:
         """This method provides the logic to grow the tree. In current
         implementation it creates two children nodes if None of the end
         conditions or pruning conditions are met.
@@ -313,18 +338,25 @@ class Node:
         # Check end conditions
 
         # If the node is pure (or there are no rows left)
-        if (self._gini(self._data) == 0 or
+        if (
+            self._gini(self._data) == 0
+            or
             # If the node has no more features to split
-            len(self._data.columns.to_list()) == 1 or
+            len(self._data.columns.to_list()) == 1
+            or
             # Check pruning conditions
-
             # If the node has less than a certain amount of rows
-            self._data.shape[0] < self._min_rows or
+            self._data.shape[0] < self._min_rows
+            or
             # If the max depth is reached
-            self._depth >= self._max_depth or
+            self._depth >= self._max_depth
+            or
             # If the gini impurity of the parent is less than a certain treshold
-            (self._parent_split_impurity is not None and \
-                self._parent_split_impurity < self._min_impurity_treshold)):
+            (
+                self._parent_split_impurity is not None
+                and self._parent_split_impurity < self._min_impurity_treshold
+            )
+        ):
             # Grow a leaf
             self._grow_leaf()
             return
@@ -351,8 +383,10 @@ class Node:
         # Check the last pruning condition
 
         # If the best split gini index is not better than the parent
-        if self._parent_split_impurity is not None and \
-                best_split_gini >= self._parent_split_impurity:
+        if (
+            self._parent_split_impurity is not None
+            and best_split_gini >= self._parent_split_impurity
+        ):
             # Grow a leaf
             self._grow_leaf()
             return
@@ -370,30 +404,34 @@ class Node:
         right_data = right_data.drop(columns=[split_feature])
 
         # Create the children nodes
-        self._left_child = Node(data=left_data,
-                                target_feature=self._target_feature,
-                                categorical_features=self._categorical_features,
-                                depth=self._depth + 1,
-                                parent_split_impurity=best_split_gini,
-                                max_depth=self._max_depth,
-                                min_rows=self._min_rows,
-                                split_search_density=self._split_search_density,
-                                min_impurity_treshold=self._min_impurity_treshold)
-        self._right_child = Node(data=right_data,
-                                 target_feature=self._target_feature,
-                                 categorical_features=self._categorical_features,
-                                 depth=self._depth + 1,
-                                 parent_split_impurity=best_split_gini,
-                                 max_depth=self._max_depth,
-                                 min_rows=self._min_rows,
-                                 split_search_density=self._split_search_density,
-                                 min_impurity_treshold=self._min_impurity_treshold)
+        self._left_child = Node(
+            data=left_data,
+            target_feature=self._target_feature,
+            categorical_features=self._categorical_features,
+            depth=self._depth + 1,
+            parent_split_impurity=best_split_gini,
+            max_depth=self._max_depth,
+            min_rows=self._min_rows,
+            split_search_density=self._split_search_density,
+            min_impurity_treshold=self._min_impurity_treshold,
+        )
+        self._right_child = Node(
+            data=right_data,
+            target_feature=self._target_feature,
+            categorical_features=self._categorical_features,
+            depth=self._depth + 1,
+            parent_split_impurity=best_split_gini,
+            max_depth=self._max_depth,
+            min_rows=self._min_rows,
+            split_search_density=self._split_search_density,
+            min_impurity_treshold=self._min_impurity_treshold,
+        )
 
         # Grow the children nodes
         self._left_child._grow()
         self._right_child._grow()
 
-    def _predict(self, row: pd.Series):
+    def _predict(self, row: pd.Series) -> object:
         """This method provides the logic to predict a row's class. It will return
         either call upon children nodes or return the most common value of the target
         feature.
