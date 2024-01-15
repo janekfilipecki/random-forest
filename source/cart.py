@@ -163,7 +163,16 @@ class Node:
         self._min_impurity_treshold: float = min_impurity_treshold
 
     def __repr__(self) -> str:
-        """This method represents the object as a string."""
+        """This method represents the object as a string.
+
+        Args:
+            None
+        Returns:
+            None
+        Raises:
+            None
+        """
+
         tabs = "|    " * self._depth
         output = tabs
         if self._left_child and self._right_child:
@@ -185,6 +194,7 @@ class Node:
 
     def _grow_leaf(self) -> None:
         """This method sets the label of the leaf node to the most common value
+
         Args:
             None
         Returns:
