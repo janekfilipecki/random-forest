@@ -32,10 +32,7 @@ results = pd.DataFrame({})
 
 for i in range (0, tree_limit):
     cart.fit(bootstrap_data(data), 'status', [])
-    # print(cart.predict)
     results[i] = data.apply(cart.predict, axis=1)
-    print(results)
-    # print(data)
 
 
 # tutaj average i konkatenacja do 1 kolumny
