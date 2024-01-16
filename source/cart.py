@@ -20,7 +20,7 @@ class CART:
         predictions.
 
         Hyperparameters:
-            - max_depth: The maximum depth of the tree for pruing purposes. By
+            - max_depth: The maximum depth of the tree for pruning purposes. By
                 default it is set to infinity, meaning that the tree will grow
                 until all end conditions are met.
             - min_rows: The minimum amount of rows that a node must have in
@@ -28,7 +28,7 @@ class CART:
             - split_search_density: The density of the split search. The
                 higher the density, the more splits will be calculated. 10 by
                 default.
-            - min_impurity_treshold=: The gini impurity treshold for pruing
+            - min_impurity_treshold=: The gini impurity treshold for pruning
                 purposes. The
                 impurity pruning is off by default.
 
@@ -151,7 +151,7 @@ class Node:
 
         # HYPERPARAMETERS
 
-        # The maximum depth of the tree for pruing purposes
+        # The maximum depth of the tree for pruning purposes
         self._max_depth: int = max_depth
         # The minimum amount of rows that a node must have in order
         # to be able to split

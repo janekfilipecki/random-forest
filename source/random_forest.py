@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 from cart import CART
 from sklearn.metrics import accuracy_score
+from datetime import datetime
+
 
 def bootstrap_data(data):
     print(len(data))
@@ -22,9 +24,11 @@ def bootstrap_data(data):
     return data_bootstrap
 
 
-tree_limit = 10
+tree_limit = 200
 data = pd.read_csv('../datasets/Parkinsson_disease.csv')
 data = data.drop(['name'], axis=1)
+startTime = datetime.now()
+
 cart = CART(split_search_density=5)
 
 
@@ -33,6 +37,13 @@ results = pd.DataFrame({})
 for i in range (0, tree_limit):
     cart.fit(bootstrap_data(data), 'status', [])
     results[i] = data.apply(cart.predict, axis=1)
+    if i in [50,100,150]:
+        print("Time for trees n =:" + str(i) + " " + str(datetime.now() - startTime)) 
+        results['mean']=results.mean(axis=1)
+        results['round_up']=results.mean(axis=1).round()
+        print()
+        print(accuracy_score(data['status'], results['round_up']))
+
 
 
 # tutaj average i konkatenacja do 1 kolumny
