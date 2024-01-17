@@ -14,6 +14,7 @@ class CART:
         min_rows: int = 2,
         split_search_density: int = 10,
         min_impurity_treshold: float = 0,
+        selective_pruning: bool = True,
     ):
         """This class represents a CART decision tree. It is a control
         class that uses the Node class to build a decision tree and perform
@@ -31,6 +32,9 @@ class CART:
             - min_impurity_treshold=: The gini impurity treshold for pruning
                 purposes. The
                 impurity pruning is off by default.
+            - selective_pruning: If selective pruning is on, the node will only
+                be pruned if the gini impurity of the best split is not better
+                than the parent gini impurity. True by default.
 
         Example:
             TODO
@@ -42,6 +46,7 @@ class CART:
         self._min_rows: int = min_rows
         self._split_search_density: int = split_search_density
         self._min_impurity_treshold: float = min_impurity_treshold
+        self._selective_pruning: bool = selective_pruning
 
         # The root node of the tree, set up when calling the fit method
         self._root: Node = None
@@ -58,7 +63,9 @@ class CART:
         """
         return repr(self._root)
 
-    def fit(self, data, target_feature, categorical_features):
+    def fit(
+        self, data, target_feature, categorical_features: typing.List[str] = []
+    ):
         """This method builds the decision tree using the Node class.
 
         Args:
@@ -77,6 +84,7 @@ class CART:
             min_rows=self._min_rows,
             split_search_density=self._split_search_density,
             min_impurity_treshold=self._min_impurity_treshold,
+            selective_pruning=self._selective_pruning,
         )
 
         # Grow the root node
@@ -108,6 +116,7 @@ class Node:
         min_rows: int = 2,
         split_search_density: int = 10,
         min_impurity_treshold: float = 0,
+        selective_pruning: bool = True,
     ):
         """This class represents a node in a decision tree. It provides
         an necessary logic to build a decision tree and perform predictions.
@@ -161,6 +170,10 @@ class Node:
         self._split_search_density: int = split_search_density
         # The gini impurity treshold for pruing purposes
         self._min_impurity_treshold: float = min_impurity_treshold
+        # If selective pruning is on, the node will only be pruned if the
+        # gini impurity of the best split is not better than the parent
+        # gini impurity
+        self._selective_pruning: bool = selective_pruning
 
     def __repr__(self) -> str:
         """This method represents the object as a string.
@@ -386,9 +399,10 @@ class Node:
             self._depth >= self._max_depth
             or
             # If the gini impurity of the parent is less than a certain
-            # treshold
+            # treshold, given selective pruning is on
             (
-                self._parent_split_impurity is not None
+                self._selective_pruning
+                and self._parent_split_impurity is not None
                 and self._parent_split_impurity < self._min_impurity_treshold
             )
         ):
@@ -449,6 +463,7 @@ class Node:
             min_rows=self._min_rows,
             split_search_density=self._split_search_density,
             min_impurity_treshold=self._min_impurity_treshold,
+            selective_pruning=self._selective_pruning,
         )
         self._right_child = Node(
             data=right_data,
@@ -460,6 +475,7 @@ class Node:
             min_rows=self._min_rows,
             split_search_density=self._split_search_density,
             min_impurity_treshold=self._min_impurity_treshold,
+            selective_pruning=self._selective_pruning,
         )
 
         # Grow the children nodes
