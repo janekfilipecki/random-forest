@@ -82,29 +82,8 @@ def get_data_for_min_rows(value):
 
 print(get_data_for_min_rows(2))
 
-def get_data_for_min_rows(value):
-    acc = []
-    recall = []
-    precision = []
-    f1 = []
-    time=[]
-    for i in range (0, 5):
-        copy_data = data.copy(deep=True)
-        startTime = datetime.now()
-        rf = RandomForest(forest_size=50, min_rows=value+2*i)
-        rf.fit(copy_data, target_feature='output')
-        copy_data['predictions'] = copy_data.apply(rf.predict, axis=1)
-        acc.append(accuracy_score(copy_data['output'], copy_data['predictions']))
-        recall.append(recall_score(copy_data['output'], copy_data['predictions']))
-        precision.append(precision_score(copy_data['output'], copy_data['predictions']))
-        f1.append(f1_score(copy_data['output'], copy_data['predictions']))
-        time.append((datetime.now() - startTime).total_seconds())
-    return acc, recall, precision, f1, time
 
-print(get_data_for_min_rows(2))
-
-
-def get_data_for_min_rows(value):
+def get_data_for_split_density(value):
     acc = []
     recall = []
     precision = []
@@ -123,7 +102,7 @@ def get_data_for_min_rows(value):
         time.append((datetime.now() - startTime).total_seconds())
     return acc, recall, precision, f1, time
 
-print(get_data_for_min_rows(12))
+# print(get_data_for_split_density(12))
 
 
 # sns.heatmap(multilabel_confusion_matrix(data['quality'], data['predictions']))
