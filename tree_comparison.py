@@ -45,11 +45,10 @@ def get_data_for_max_depth(value):
     precision = []
     f1 = []
     time=[]
-    for i in range (0, 6):
-        print(value-2*i)
+    for i in range (0, 5):
         copy_data = data.copy(deep=True)
         startTime = datetime.now()
-        rf = RandomForest(forest_size=50, max_depth=value-2*i)
+        rf = RandomForest(forest_size=50, max_depth=value-i)
         rf.fit(copy_data, target_feature='output')
         copy_data['predictions'] = copy_data.apply(rf.predict, axis=1)
         acc.append(accuracy_score(copy_data['output'], copy_data['predictions']))
@@ -59,7 +58,7 @@ def get_data_for_max_depth(value):
         time.append((datetime.now() - startTime).total_seconds())
     return acc, recall, precision, f1, time
 
-print(get_data_for_max_depth(13))
+# print(get_data_for_max_depth(13))
 
 
 def get_data_for_min_rows(value):
@@ -81,6 +80,7 @@ def get_data_for_min_rows(value):
         time.append((datetime.now() - startTime).total_seconds())
     return acc, recall, precision, f1, time
 
+# 2 4 6 8 10
 # print(get_data_for_min_rows(2))
 
 
@@ -105,5 +105,28 @@ def get_data_for_split_density(value):
 
 # print(get_data_for_split_density(15))
 
+def get_data_for_impurity_threshhold(value):
+    acc = []
+    recall = []
+    precision = []
+    f1 = []
+    time=[]
+    for i in range (0, 6):
+        print(0.1*i)
+        copy_data = data.copy(deep=True)
+        startTime = datetime.now()
+        rf = RandomForest(forest_size=5, min_impurity_treshold=value-+0.1*i)
+        rf.fit(copy_data, target_feature='output')
+        copy_data['predictions'] = copy_data.apply(rf.predict, axis=1)
+        acc.append(accuracy_score(copy_data['output'], copy_data['predictions']))
+        recall.append(recall_score(copy_data['output'], copy_data['predictions']))
+        precision.append(precision_score(copy_data['output'], copy_data['predictions']))
+        f1.append(f1_score(copy_data['output'], copy_data['predictions']))
+        time.append((datetime.now() - startTime).total_seconds())
+    return acc, recall, precision, f1, time
+
+print(get_data_for_impurity_threshhold(0))
+
+#min_impurity_treshold
 
 # sns.heatmap(multilabel_confusion_matrix(data['quality'], data['predictions']))
