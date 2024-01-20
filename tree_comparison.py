@@ -45,10 +45,11 @@ def get_data_for_max_depth(value):
     precision = []
     f1 = []
     time=[]
-    for i in range (0, 5):
+    for i in range (0, 6):
+        print(value-2*i)
         copy_data = data.copy(deep=True)
         startTime = datetime.now()
-        rf = RandomForest(forest_size=50, max_depth=value-i)
+        rf = RandomForest(forest_size=50, max_depth=value-2*i)
         rf.fit(copy_data, target_feature='output')
         copy_data['predictions'] = copy_data.apply(rf.predict, axis=1)
         acc.append(accuracy_score(copy_data['output'], copy_data['predictions']))
@@ -58,7 +59,7 @@ def get_data_for_max_depth(value):
         time.append((datetime.now() - startTime).total_seconds())
     return acc, recall, precision, f1, time
 
-# print(get_data_for_max_depth(13))
+print(get_data_for_max_depth(13))
 
 
 def get_data_for_min_rows(value):
@@ -102,7 +103,7 @@ def get_data_for_split_density(value):
         time.append((datetime.now() - startTime).total_seconds())
     return acc, recall, precision, f1, time
 
-print(get_data_for_split_density(15))
+# print(get_data_for_split_density(15))
 
 
 # sns.heatmap(multilabel_confusion_matrix(data['quality'], data['predictions']))
