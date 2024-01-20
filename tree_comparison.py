@@ -80,7 +80,7 @@ def get_data_for_min_rows(value):
         time.append((datetime.now() - startTime).total_seconds())
     return acc, recall, precision, f1, time
 
-print(get_data_for_min_rows(2))
+# print(get_data_for_min_rows(2))
 
 
 def get_data_for_split_density(value):
@@ -89,7 +89,7 @@ def get_data_for_split_density(value):
     precision = []
     f1 = []
     time=[]
-    for i in range (0, 3):
+    for i in range (0, 5):
         copy_data = data.copy(deep=True)
         startTime = datetime.now()
         rf = RandomForest(forest_size=50, split_search_density=value-3*i)
@@ -102,7 +102,7 @@ def get_data_for_split_density(value):
         time.append((datetime.now() - startTime).total_seconds())
     return acc, recall, precision, f1, time
 
-# print(get_data_for_split_density(12))
+print(get_data_for_split_density(15))
 
 
 # sns.heatmap(multilabel_confusion_matrix(data['quality'], data['predictions']))
