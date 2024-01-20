@@ -18,15 +18,17 @@ data = pd.read_csv('datasets/heart.csv')
 # print(data.head())
 # print(data['output'].value_counts())
 
-startTime = datetime.now()
-rf = RandomForest(forest_size=50, selective_pruning=True)
-rf.fit(data, target_feature='output')
-data['predictions'] = data.apply(rf.predict, axis=1)
-print(accuracy_score(data['output'], data['predictions']))
-print(recall_score(data['output'], data['predictions']))
-print(precision_score(data['output'], data['predictions']))
-print(f1_score(data['output'], data['predictions']))
-print("Time for trees = :" + str(datetime.now() - startTime)) 
+# Selective pruning!
+
+# startTime = datetime.now()
+# rf = RandomForest(forest_size=50, selective_pruning=True)
+# rf.fit(data, target_feature='output')
+# data['predictions'] = data.apply(rf.predict, axis=1)
+# print(accuracy_score(data['output'], data['predictions']))
+# print(recall_score(data['output'], data['predictions']))
+# print(precision_score(data['output'], data['predictions']))
+# print(f1_score(data['output'], data['predictions']))
+# print("Time for trees = :" + str(datetime.now() - startTime)) 
 
 # print(confusion_matrix(data['output'], data['predictions']))
 
@@ -35,7 +37,27 @@ print("Time for trees = :" + str(datetime.now() - startTime))
 #             fmt='.2%', cmap='Blues')
 # plt.show()
 
+# Max depth
 
+def get_data_for_params(value):
+    acc = []
+    recall = []
+    precision = []
+    f1 = []
+    time=[]
+    for i in range (0, 5):
+        copy_data = data.copy(deep=True)
+        startTime = datetime.now()
+        rf = RandomForest(forest_size=50, max_depth=value-i)
+        rf.fit(copy_data, target_feature='output')
+        copy_data['predictions'] = copy_data.apply(rf.predict, axis=1)
+        acc.append(accuracy_score(copy_data['output'], copy_data['predictions']))
+        recall.append(recall_score(copy_data['output'], copy_data['predictions']))
+        precision.append(precision_score(copy_data['output'], copy_data['predictions']))
+        f1.append(f1_score(copy_data['output'], copy_data['predictions']))
+        time.append((datetime.now() - startTime).total_seconds())
+    return acc, recall, precision, f1, time
 
+print(get_data_for_params(13))
 
 # sns.heatmap(multilabel_confusion_matrix(data['quality'], data['predictions']))
