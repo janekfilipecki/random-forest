@@ -111,9 +111,15 @@ class RandomForest:
                 self._oob_data.append(data.drop(tree_train_data.index))
             # Feature bagging
             if self._enable_feature_bagging:
+                # Secure target feature column from being filtered, add it later after feature bagging
+                output_column = tree_train_data[target_feature]
+                tree_train_data =tree_train_data.drop(columns=[target_feature])
                 tree_train_data = tree_train_data.sample(
                     frac=self._max_features, axis=1, replace=False
                 )
+                print(tree_train_data.head())
+                print(output_column.head())
+                tree_train_data = pd.concat([tree_train_data, output_column],axis=1)
             # Create tree
             tree = CART(
                 max_depth=self._max_depth,
