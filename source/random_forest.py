@@ -117,8 +117,6 @@ class RandomForest:
                 tree_train_data = tree_train_data.sample(
                     frac=self._max_features, axis=1, replace=False
                 )
-                print(tree_train_data.head())
-                print(output_column.head())
                 tree_train_data = pd.concat([tree_train_data, output_column],axis=1)
             # Create tree
             tree = CART(
