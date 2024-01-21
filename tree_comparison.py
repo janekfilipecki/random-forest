@@ -126,8 +126,53 @@ def get_data_for_impurity_threshhold(value):
         time.append((datetime.now() - startTime).total_seconds())
     return acc, recall, precision, f1, time
 
-print(get_data_for_impurity_threshhold(0))
+# print(get_data_for_impurity_threshhold(0))
 
-#min_impurity_treshold
+
+def get_data_for_bootstrapping(value):
+    acc = []
+    recall = []
+    precision = []
+    f1 = []
+    time=[]
+    for i in range (0, 7):
+        print(str(value-(0.1*i)))
+        copy_data = data.copy(deep=True)
+        startTime = datetime.now()
+        rf = RandomForest(forest_size=5, max_samples=value-(0.1*i))
+        rf.fit(copy_data, target_feature='output')
+        copy_data['predictions'] = copy_data.apply(rf.predict, axis=1)
+        acc.append(accuracy_score(copy_data['output'], copy_data['predictions']))
+        recall.append(recall_score(copy_data['output'], copy_data['predictions']))
+        precision.append(precision_score(copy_data['output'], copy_data['predictions']))
+        f1.append(f1_score(copy_data['output'], copy_data['predictions']))
+        time.append((datetime.now() - startTime).total_seconds())
+    return acc, recall, precision, f1, time
+
+print(get_data_for_bootstrapping(1))
+
+
+def get_data_for_feature_bagging(value):
+    acc = []
+    recall = []
+    precision = []
+    f1 = []
+    time=[]
+    for i in range (0, 7):
+        print(str(value-(0.1*i)))
+        copy_data = data.copy(deep=True)
+        startTime = datetime.now()
+        rf = RandomForest(forest_size=5, max_features=value-(0.1*i))
+        rf.fit(copy_data, target_feature='output')
+        copy_data['predictions'] = copy_data.apply(rf.predict, axis=1)
+        acc.append(accuracy_score(copy_data['output'], copy_data['predictions']))
+        recall.append(recall_score(copy_data['output'], copy_data['predictions']))
+        precision.append(precision_score(copy_data['output'], copy_data['predictions']))
+        f1.append(f1_score(copy_data['output'], copy_data['predictions']))
+        time.append((datetime.now() - startTime).total_seconds())
+    return acc, recall, precision, f1, time
+
+print(get_data_for_feature_bagging(1))
+
 
 # sns.heatmap(multilabel_confusion_matrix(data['quality'], data['predictions']))
