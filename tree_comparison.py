@@ -112,11 +112,11 @@ def get_data_for_impurity_threshhold(value):
     precision = []
     f1 = []
     time=[]
-    for i in range (0, 6):
+    for i in range (0, 7):
         print(0.1*i)
         copy_data = data.copy(deep=True)
         startTime = datetime.now()
-        rf = RandomForest(forest_size=5, min_impurity_treshold=value-+0.1*i)
+        rf = RandomForest(forest_size=50, min_impurity_treshold=value-+0.1*i)
         rf.fit(copy_data, target_feature='output')
         copy_data['predictions'] = copy_data.apply(rf.predict, axis=1)
         acc.append(accuracy_score(copy_data['output'], copy_data['predictions']))
