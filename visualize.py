@@ -128,52 +128,159 @@ secondsInMin = 60
 # fig.show()
 
 
-# gini_impurity:
-months = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
-acc = np.round([0.8877887788778878, 0.8481848184818482, 0.8448844884488449, 0.8250825082508251, 0.759075907590759, 0.759075907590759, 0.759075907590759],3)
-recall = np.round([0.9333333333333333, 0.9696969696969697, 0.9454545454545454, 0.9333333333333333, 0.7636363636363637, 0.7636363636363637, 0.7636363636363637], 3)
-precision = np.round([0.8700564971751412, 0.7960199004975125, 0.8041237113402062, 0.7857142857142857, 0.7875, 0.7875, 0.7875], 3)
-f1 = np.round([0.9005847953216375, 0.8743169398907105, 0.8690807799442897, 0.8531855955678669, 0.7753846153846152, 0.7753846153846152, 0.7753846153846152],3)
-time= [45.474342, 37.951341, 28.774322, 14.732761, 4.43687, 4.444344, 4.42526]
-time_minutes = np.round([x / secondsInMin for x in time], 3)
+# # gini_impurity:
+# months = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
+# acc = np.round([0.8877887788778878, 0.8481848184818482, 0.8448844884488449, 0.8250825082508251, 0.759075907590759, 0.759075907590759, 0.759075907590759],3)
+# recall = np.round([0.9333333333333333, 0.9696969696969697, 0.9454545454545454, 0.9333333333333333, 0.7636363636363637, 0.7636363636363637, 0.7636363636363637], 3)
+# precision = np.round([0.8700564971751412, 0.7960199004975125, 0.8041237113402062, 0.7857142857142857, 0.7875, 0.7875, 0.7875], 3)
+# f1 = np.round([0.9005847953216375, 0.8743169398907105, 0.8690807799442897, 0.8531855955678669, 0.7753846153846152, 0.7753846153846152, 0.7753846153846152],3)
+# time= [45.474342, 37.951341, 28.774322, 14.732761, 4.43687, 4.444344, 4.42526]
+# time_minutes = np.round([x / secondsInMin for x in time], 3)
 
-fig = go.Figure()
-fig.add_trace(go.Bar(
-    x=months,
-    y=acc,
-    name='Accuracy',
-    text=acc,
-    textposition='outside'))
-fig.add_trace(go.Bar(
-    x=months,
-    y=recall,
-    name='Recall',
-    text=recall,
-    textposition='outside'
-))
-fig.add_trace(go.Bar(
-    x=months,
-    y=precision,
-    name='Precision',
-    text=precision,
-    textposition='outside'
-))
-fig.add_trace(go.Bar(
-    x=months,
-    y=f1,
-    name='F1',
-    text=f1,
-    textposition='outside'
-))
-fig.add_trace(go.Bar(
-    x=months,
-    y=time_minutes,
-    name='Time [min]',
-    text=time_minutes,
-    textposition='outside'
-))
+# fig = go.Figure()
+# fig.add_trace(go.Bar(
+#     x=months,
+#     y=acc,
+#     name='Accuracy',
+#     text=acc,
+#     textposition='outside'))
+# fig.add_trace(go.Bar(
+#     x=months,
+#     y=recall,
+#     name='Recall',
+#     text=recall,
+#     textposition='outside'
+# ))
+# fig.add_trace(go.Bar(
+#     x=months,
+#     y=precision,
+#     name='Precision',
+#     text=precision,
+#     textposition='outside'
+# ))
+# fig.add_trace(go.Bar(
+#     x=months,
+#     y=f1,
+#     name='F1',
+#     text=f1,
+#     textposition='outside'
+# ))
+# fig.add_trace(go.Bar(
+#     x=months,
+#     y=time_minutes,
+#     name='Time [min]',
+#     text=time_minutes,
+#     textposition='outside'
+# ))
 
-fig.update_layout(barmode='group', xaxis_tickangle=-45)
-fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
-fig.update_layout(title='Wpływ gini_impurity na wartość parametrów, 50 drzew', title_x=0.5, font=dict(size=20))
-fig.show()
+# fig.update_layout(barmode='group', xaxis_tickangle=-45)
+# fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+# fig.update_layout(title='Wpływ gini_impurity na wartość parametrów, 50 drzew', title_x=0.5, font=dict(size=20))
+# fig.show()
+
+
+# bootstrapping:
+# months = [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4]
+# acc = np.round([0.8514851485148515, 0.8877887788778878, 0.8679867986798679, 0.8811881188118812, 0.8778877887788779, 0.8943894389438944, 0.8745874587458746],3)
+# recall = np.round([0.9333333333333333, 0.9333333333333333, 0.9393939393939394, 0.9393939393939394, 0.9515151515151515, 0.9575757575757575, 0.9333333333333333], 3)
+# precision = np.round([0.8191489361702128, 0.8700564971751412, 0.8378378378378378, 0.856353591160221, 0.8440860215053764, 0.8633879781420765, 0.850828729281768], 3)
+# f1 = np.round([0.8725212464589235, 0.9005847953216375, 0.8857142857142858, 0.8959537572254335, 0.8945868945868947, 0.9080459770114941, 0.8901734104046243],3)
+# time= [46.070653, 47.922621, 44.809524, 43.214698, 41.008881, 39.663027, 38.090268]
+# time_minutes = np.round([x / secondsInMin for x in time], 3)
+
+# fig = go.Figure()
+# fig.add_trace(go.Bar(
+#     x=months,
+#     y=acc,
+#     name='Accuracy',
+#     text=acc,
+#     textposition='outside'))
+# fig.add_trace(go.Bar(
+#     x=months,
+#     y=recall,
+#     name='Recall',
+#     text=recall,
+#     textposition='outside'
+# ))
+# fig.add_trace(go.Bar(
+#     x=months,
+#     y=precision,
+#     name='Precision',
+#     text=precision,
+#     textposition='outside'
+# ))
+# fig.add_trace(go.Bar(
+#     x=months,
+#     y=f1,
+#     name='F1',
+#     text=f1,
+#     textposition='outside'
+# ))
+# fig.add_trace(go.Bar(
+#     x=months,
+#     y=time_minutes,
+#     name='Time [min]',
+#     text=time_minutes,
+#     textposition='outside'
+# ))
+
+# fig.update_layout(barmode='group', xaxis_tickangle=-45)
+# fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+# fig.update_layout(title='Wpływ bootstrapping na wartość parametrów, 50 drzew', title_x=0.5, font=dict(size=20))
+# fig.show()
+
+# # feature_bagging:
+# months = [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2]
+# acc = np.round([0.8448844884488449, 0.8745874587458746, 0.8811881188118812, 0.8712871287128713, 0.8646864686468647],3)
+# recall = np.round([0.9696969696969697, 0.9393939393939394, 0.9272727272727272, 0.9636363636363636, 0.9454545454545454], 3)
+# precision = np.round([0.7920792079207921, 0.8469945355191257, 0.864406779661017, 0.828125, 0.8297872340425532], 3)
+# f1 = np.round([0.8719346049046321, 0.8908045977011495, 0.8947368421052632, 0.8907563025210083, 0.8838526912181301],3)
+# time= [52.441393, 47.820612, 36.943312, 32.516728, 27.450116]
+# time_minutes = np.round([x / secondsInMin for x in time], 3)
+
+# fig = go.Figure()
+# fig.add_trace(go.Bar(
+#     x=months,
+#     y=acc,
+#     name='Accuracy',
+#     text=acc,
+#     textposition='outside'))
+# fig.add_trace(go.Bar(
+#     x=months,
+#     y=recall,
+#     name='Recall',
+#     text=recall,
+#     textposition='outside'
+# ))
+# fig.add_trace(go.Bar(
+#     x=months,
+#     y=precision,
+#     name='Precision',
+#     text=precision,
+#     textposition='outside'
+# ))
+# fig.add_trace(go.Bar(
+#     x=months,
+#     y=f1,
+#     name='F1',
+#     text=f1,
+#     textposition='outside'
+# ))
+# fig.add_trace(go.Bar(
+#     x=months,
+#     y=time_minutes,
+#     name='Time [min]',
+#     text=time_minutes,
+#     textposition='outside'
+# ))
+
+# fig.update_layout(barmode='group', xaxis_tickangle=-45)
+# fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+# fig.update_layout(title='Wpływ feature_bagging na wartość parametrów, 50 drzew', title_x=0.5, font=dict(size=20))
+# fig.show()
+
+
+
+# jeszce min_rows
+
+# max_depth powtorz bez selective_pruning
