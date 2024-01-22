@@ -226,7 +226,7 @@ def get_data_for_feature_bagging(value):
 # print(get_data_for_feature_bagging(1))
 
 
-def get_acc_vs_scikit_forest_size(data, target_feature):
+def get_vs_scikit_forest_size(data, target_feature):
     own = {"acc": [], "recall": [], "precision": [], "f1": [], "time": []}
     scikit = copy.deepcopy(own)
     for f_size in [10, 20, 50, 100, 200, 500]:
@@ -287,6 +287,6 @@ def get_acc_vs_scikit_forest_size(data, target_feature):
     return own, scikit
 
 
-print(get_acc_vs_scikit_forest_size(data, "output"))
+print(get_vs_scikit_forest_size(data, "output"))
 # sns.heatmap(multilabel_confusion_matrix(
 # data['quality'], data['predictions']))
