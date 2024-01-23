@@ -7,7 +7,7 @@ from sklearn.metrics import (
 )
 from source.random_forest import RandomForest
 from datetime import datetime
-# from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import copy
 
@@ -228,60 +228,63 @@ def get_data_for_feature_bagging(value):
 def get_vs_scikit_forest_size(data, target_feature):
     own = {"acc": [], "recall": [], "precision": [], "f1": [], "time": []}
     scikit = copy.deepcopy(own)
-    # for f_size in [10, 20, 50, 100, 200, 500]:
-    for f_size in [10, 20, 30]:
+    train, test_arr = train_test_split(data, test_size=0.25)
+    for f_size in [10, 20, 50, 100, 200, 500]:
+    # for f_size in [10, 20, 30]:
         print("curr forest size: " + str(f_size))
         print("own")
-        copy_data = data.copy(deep=True)
+        copy_data = train.copy(deep=True)
+        test_arr_own = test_arr.copy(deep=True)
         startTime = datetime.now()
         rf = RandomForest(
             forest_size=f_size, max_features=0.5, min_impurity_treshold=0.3
         )
         rf.fit(copy_data, target_feature=target_feature)
-        copy_data["predictions"] = copy_data.apply(rf.predict, axis=1)
+        test_arr_own["predictions"] = test_arr_own.apply(rf.predict, axis=1)
         own["acc"].append(
-            accuracy_score(copy_data[target_feature], copy_data["predictions"])
+            accuracy_score(test_arr_own[target_feature], test_arr_own["predictions"])
         )
         own["recall"].append(
-            recall_score(copy_data[target_feature], copy_data["predictions"])
+            recall_score(test_arr_own[target_feature], test_arr_own["predictions"])
         )
         own["precision"].append(
             precision_score(
-                copy_data[target_feature], copy_data["predictions"]
+                test_arr_own[target_feature], test_arr_own["predictions"]
             )
         )
         own["f1"].append(
-            f1_score(copy_data[target_feature], copy_data["predictions"])
+            f1_score(test_arr_own[target_feature], test_arr_own["predictions"])
         )
         own["time"].append((datetime.now() - startTime).total_seconds())
         print("scikit")
 
-        copy_data = data.copy(deep=True)
+        copy_data = train.copy(deep=True)
+        test_arr_scikit = test_arr.copy(deep=True)
         startTime = datetime.now()
         rf = RandomForestClassifier(n_estimators=f_size)
         rf.fit(
             copy_data.drop(columns=[target_feature]),
             copy_data[target_feature].values.ravel(),
         )
-        copy_data["predictions"] = rf.predict(
-            copy_data.drop(columns=[target_feature])
+        test_arr_scikit["predictions"] = rf.predict(
+            test_arr_scikit.drop(columns=[target_feature])
         )
         scikit["acc"].append(
-            accuracy_score(copy_data[target_feature], copy_data["predictions"])
+            accuracy_score(test_arr_scikit[target_feature], test_arr_scikit["predictions"])
         )
         scikit["recall"].append(
-            recall_score(copy_data[target_feature], copy_data["predictions"])
+            recall_score(test_arr_scikit[target_feature], test_arr_scikit["predictions"])
         )
         scikit["precision"].append(
             precision_score(
-                copy_data[target_feature], copy_data["predictions"]
+                test_arr_scikit[target_feature], test_arr_scikit["predictions"]
             )
         )
         scikit["f1"].append(
-            f1_score(copy_data[target_feature], copy_data["predictions"])
+            f1_score(test_arr_scikit[target_feature], test_arr_scikit["predictions"])
         )
         scikit["time"].append((datetime.now() - startTime).total_seconds())
-    with open("own_vs_scikit.txt", "w") as f:
+    with open("own_vs_scikit.txt", "a") as f:
         print(own, file=f)
         print(scikit, file=f)
     return own, scikit
