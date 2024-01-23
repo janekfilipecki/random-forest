@@ -1,6 +1,7 @@
 import pandas as pd
 import typing
 import copy
+
 import numpy as np
 import math
 from operator import xor
@@ -217,7 +218,10 @@ class Node:
         """
         # Set the label of the node to the most common value of the target
         # feature
-        self._leaf_label = self._data[self._target_feature].mode()[0]
+        try:
+            self._leaf_label = self._data[self._target_feature].mode()[0]
+        except KeyError as err:
+            print(err)
 
     def _gini(self, subset: pd.DataFrame) -> float:
         """Calculate the gini impurity of a subset of the nodes data.
@@ -300,6 +304,49 @@ class Node:
         Raises:
             TODO
         """
+        # splits = []
+        # # Remove the target feature from the list of features
+        # features = copy.copy(self._data.columns.to_list())
+        # features.remove(self._target_feature)
+        # # For each feature
+        # for feature in features:
+        #     is_categorical = False
+        #     # If the feature is categorical
+        #     if feature in self._categorical_features:
+        #         is_categorical = True
+        #         # For each value in the feature
+        #         for split_value in self._data[feature].unique():
+        #             splits.append((feature, is_categorical, split_value))
+        #     # If the feature is numerical
+        #     else:
+        #         # Here is the tricky part. We tried splitting the data in
+        #         # with linear spacing, but it resulted in a lot of invalid
+        #         # splits (the left subset was empty). So we decided to split
+        #         # the data in the midpoints between consecutive values.
+
+        #         # TODO idk why this is better thatn the previous implementation
+        #         # split_values = np.linspace(
+        #         #             min_value, max_value, self._split_search_density
+        #         #         )
+        #         # THis shouldn't return invalid split points
+
+        #         # Sort unique values of the numerical feature
+        #         # TODO reduce the number of splitting points
+        #         unique_values = sorted(self._data[feature].unique())
+        #         # Calculate midpoints between consecutive values
+        #         midpoints = [
+        #             (unique_values[i] + unique_values[i + 1]) / 2
+        #             for i in range(len(unique_values) - 1)
+        #         ]
+        #         for split_value in midpoints:
+        #             splits.append((feature, is_categorical, split_value))
+
+        # return splits
+
+    # Here is the old code that was used to calculate the splits. It is
+    # faulty though, sometimes resultet in splits that are invalid
+    # (the left subset is empty) and it is also very slow.
+
         splits = []
         # Remove the target feature from the list of features
         features = copy.copy(self._data.columns.to_list())
@@ -330,7 +377,6 @@ class Node:
                 )
                 for split_value in split_values:
                     splits.append((feature, is_categorical, split_value))
-
         return splits
 
     def _rate_split(self, subsets: typing.List[pd.DataFrame]) -> float:
