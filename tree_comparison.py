@@ -316,7 +316,7 @@ def get_vs_scikit_multi_class(data, target_feature, all_labels):
     own = {"acc": [], "recall": [], "precision": [], "f1": [], "time": []}
     scikit = copy.deepcopy(own)
     train, test_arr = train_test_split(data, test_size=0.25)
-    for f_size in [1600]:
+    for f_size in [20]:
         print("curr forest size: " + str(f_size))
         print("own")
         copy_data = train.copy(deep=True)
@@ -383,13 +383,13 @@ def get_vs_scikit_multi_class(data, target_feature, all_labels):
         # disp.plot()
 
 
-        # plt.title("Nasza implementacja")
-        # cm_our = confusion_matrix(test_arr_own[target_feature], test_arr_own["predictions"])
-        # disp = ConfusionMatrixDisplay(confusion_matrix=cm_our, display_labels=all_labels)
-        # disp.plot()
+        plt.title("Nasza implementacja")
+        cm_our = confusion_matrix(test_arr_own[target_feature], test_arr_own["predictions"])
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm_our, display_labels=all_labels)
+        disp.plot()
         
 
-        # plt.show()
+        plt.show()
 
 
     # fig, ax = plt.subplots(1,2)
@@ -413,12 +413,16 @@ def get_vs_scikit_multi_class(data, target_feature, all_labels):
 # print(get_vs_scikit_multi_class(data, "quality",['5', '6', '7', '4', '8', '3']))
 
 
-data = pd.read_csv("datasets/Date_Fruit_Datasets.csv")
-# data = data.drop(['Id'], axis=1)
+# data = pd.read_csv("datasets/Date_Fruit_Datasets.csv")
+
+# print(get_vs_scikit_multi_class(data, "Class", ['BERHI', 'DEGLET', 'DOKOL', 'IRAQI', 'ROTANA', 'SAFAVI', 'SOGAY']))
 
 
-print(get_vs_scikit_multi_class(data, "Class", ['BERHI', 'DEGLET', 'DOKOL', 'IRAQI', 'ROTANA', 'SAFAVI', 'SOGAY']))
-# print(data['Class'].unique())
+data = pd.read_csv("datasets/Rice_MSC_Dataset.csv")
+
+print(get_vs_scikit_multi_class(data, "CLASS", ['Basmati', 'Arborio', 'Jasmine', 'Ipsala', 'Karacadag']))
+
+# print(data['CLASS'].unique())
 
 
 # sns.heatmap(multilabel_confusion_matrix(
