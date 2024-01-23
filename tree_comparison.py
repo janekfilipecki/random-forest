@@ -4,7 +4,9 @@ from sklearn.metrics import (
     recall_score,
     precision_score,
     f1_score,
-    confusion_matrix
+    confusion_matrix,
+    multilabel_confusion_matrix,
+    ConfusionMatrixDisplay
 )
 from source.random_forest import RandomForest
 from datetime import datetime
@@ -308,7 +310,7 @@ def get_vs_scikit_forest_size(data, target_feature):
     return own, scikit
 
 
-print(get_vs_scikit_forest_size(data, "status"))
+# print(get_vs_scikit_forest_size(data, "status"))
 
 def get_vs_scikit_multi_class(data, target_feature):
     own = {"acc": [], "recall": [], "precision": [], "f1": [], "time": []}
@@ -329,15 +331,15 @@ def get_vs_scikit_multi_class(data, target_feature):
             accuracy_score(test_arr_own[target_feature], test_arr_own["predictions"])
         )
         own["recall"].append(
-            recall_score(test_arr_own[target_feature], test_arr_own["predictions"])
+            recall_score(test_arr_own[target_feature], test_arr_own["predictions"], average='micro')
         )
         own["precision"].append(
             precision_score(
-                test_arr_own[target_feature], test_arr_own["predictions"]
+                test_arr_own[target_feature], test_arr_own["predictions"], average='micro'
             )
         )
         own["f1"].append(
-            f1_score(test_arr_own[target_feature], test_arr_own["predictions"])
+            f1_score(test_arr_own[target_feature], test_arr_own["predictions"], average='micro')
         )
         own["time"].append((datetime.now() - startTime).total_seconds())
         print("scikit")
@@ -357,21 +359,27 @@ def get_vs_scikit_multi_class(data, target_feature):
             accuracy_score(test_arr_scikit[target_feature], test_arr_scikit["predictions"])
         )
         scikit["recall"].append(
-            recall_score(test_arr_scikit[target_feature], test_arr_scikit["predictions"])
+            recall_score(test_arr_scikit[target_feature], test_arr_scikit["predictions"], average='micro')
         )
         scikit["precision"].append(
             precision_score(
-                test_arr_scikit[target_feature], test_arr_scikit["predictions"]
+                test_arr_scikit[target_feature], test_arr_scikit["predictions"], average='micro'
             )
         )
         scikit["f1"].append(
-            f1_score(test_arr_scikit[target_feature], test_arr_scikit["predictions"])
+            f1_score(test_arr_scikit[target_feature], test_arr_scikit["predictions"], average='micro'), 
         )
         scikit["time"].append((datetime.now() - startTime).total_seconds())
     with open("own_vs_scikit.txt", "a") as f:
         print(target_feature, file=f)
         print(own, file=f)
         print(scikit, file=f)
+        cm = confusion_matrix(test_arr_scikit[target_feature], test_arr_scikit["predictions"])
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['5', '6', '7', '4', '8', '3'])
+        disp.plot()
+        plt.title("CM dla Wine_Quality")
+        plt.show()
+
     # fig, ax = plt.subplots(1,2)
     # # Heatmap from CM for own
     # sns.heatmap(confusion_matrix(test_arr_own[target_feature],
@@ -389,8 +397,12 @@ def get_vs_scikit_multi_class(data, target_feature):
     return own, scikit
 
 data = pd.read_csv("datasets/WineQuality.csv")
+data = data.drop(['Id'], axis=1)
 
-print(get_vs_scikit_multi_class(data, "status"))
+
+print(get_vs_scikit_multi_class(data, "quality"))
+# print(data['quality'].unique())
+
 
 # sns.heatmap(multilabel_confusion_matrix(
 # data['quality'], data['predictions']))
