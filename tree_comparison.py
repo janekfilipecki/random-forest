@@ -309,5 +309,88 @@ def get_vs_scikit_forest_size(data, target_feature):
 
 
 print(get_vs_scikit_forest_size(data, "status"))
+
+def get_vs_scikit_multi_class(data, target_feature):
+    own = {"acc": [], "recall": [], "precision": [], "f1": [], "time": []}
+    scikit = copy.deepcopy(own)
+    train, test_arr = train_test_split(data, test_size=0.25)
+    for f_size in [10, 100, 200, 400, 800, 1600]:
+        print("curr forest size: " + str(f_size))
+        print("own")
+        copy_data = train.copy(deep=True)
+        test_arr_own = test_arr.copy(deep=True)
+        startTime = datetime.now()
+        rf = RandomForest(
+            forest_size=f_size, max_features=0.5, min_impurity_treshold=0.3
+        )
+        rf.fit(copy_data, target_feature=target_feature)
+        test_arr_own["predictions"] = test_arr_own.apply(rf.predict, axis=1)
+        own["acc"].append(
+            accuracy_score(test_arr_own[target_feature], test_arr_own["predictions"])
+        )
+        own["recall"].append(
+            recall_score(test_arr_own[target_feature], test_arr_own["predictions"])
+        )
+        own["precision"].append(
+            precision_score(
+                test_arr_own[target_feature], test_arr_own["predictions"]
+            )
+        )
+        own["f1"].append(
+            f1_score(test_arr_own[target_feature], test_arr_own["predictions"])
+        )
+        own["time"].append((datetime.now() - startTime).total_seconds())
+        print("scikit")
+
+        copy_data = train.copy(deep=True)
+        test_arr_scikit = test_arr.copy(deep=True)
+        startTime = datetime.now()
+        rf = RandomForestClassifier(n_estimators=f_size)
+        rf.fit(
+            copy_data.drop(columns=[target_feature]),
+            copy_data[target_feature].values.ravel(),
+        )
+        test_arr_scikit["predictions"] = rf.predict(
+            test_arr_scikit.drop(columns=[target_feature])
+        )
+        scikit["acc"].append(
+            accuracy_score(test_arr_scikit[target_feature], test_arr_scikit["predictions"])
+        )
+        scikit["recall"].append(
+            recall_score(test_arr_scikit[target_feature], test_arr_scikit["predictions"])
+        )
+        scikit["precision"].append(
+            precision_score(
+                test_arr_scikit[target_feature], test_arr_scikit["predictions"]
+            )
+        )
+        scikit["f1"].append(
+            f1_score(test_arr_scikit[target_feature], test_arr_scikit["predictions"])
+        )
+        scikit["time"].append((datetime.now() - startTime).total_seconds())
+    with open("own_vs_scikit.txt", "a") as f:
+        print(target_feature, file=f)
+        print(own, file=f)
+        print(scikit, file=f)
+    # fig, ax = plt.subplots(1,2)
+    # # Heatmap from CM for own
+    # sns.heatmap(confusion_matrix(test_arr_own[target_feature],
+    # test_arr_own["predictions"])/np.sum(confusion_matrix(test_arr_own[target_feature],
+    # test_arr_own["predictions"])), annot=True,
+    #             fmt='.2%', cmap='Blues', ax=ax[0])
+    # # Heatmap from CM for scikits
+    # sns.heatmap(confusion_matrix(test_arr_scikit[target_feature],
+    # test_arr_scikit["predictions"])/np.sum(confusion_matrix(test_arr_scikit[target_feature],
+    # test_arr_scikit["predictions"])), annot=True,
+    #             fmt='.2%', cmap='Blues', ax=ax[1])
+    # ax[0].title.set_text("Nasza implementacja")
+    # ax[1].title.set_text("Scikit")
+    # plt.show()
+    return own, scikit
+
+data = pd.read_csv("datasets/WineQuality.csv")
+
+print(get_vs_scikit_multi_class(data, "status"))
+
 # sns.heatmap(multilabel_confusion_matrix(
 # data['quality'], data['predictions']))
