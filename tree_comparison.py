@@ -4,12 +4,16 @@ from sklearn.metrics import (
     recall_score,
     precision_score,
     f1_score,
+    confusion_matrix
 )
 from source.random_forest import RandomForest
 from datetime import datetime
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import copy
+import seaborn as sns
+import matplotlib as plt
+import numpy as np
 
 
 data = pd.read_csv("datasets/heart.csv")
@@ -287,6 +291,17 @@ def get_vs_scikit_forest_size(data, target_feature):
     with open("own_vs_scikit.txt", "a") as f:
         print(own, file=f)
         print(scikit, file=f)
+    # Heatmap from CM for own
+    sns.heatmap(confusion_matrix(test_arr_own[target_feature],
+    test_arr_own["predictions"])/np.sum(confusion_matrix(test_arr_own[target_feature],
+    test_arr_own["predictions"])), annot=True,
+                fmt='.2%', cmap='Blues')
+    # Heatmap from CM for scikits
+    sns.heatmap(confusion_matrix(test_arr_scikit[target_feature],
+    test_arr_scikit["predictions"])/np.sum(confusion_matrix(test_arr_scikit[target_feature],
+    test_arr_scikit["predictions"])), annot=True,
+                fmt='.2%', cmap='Blues')
+    plt.show()
     return own, scikit
 
 
