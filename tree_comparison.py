@@ -16,8 +16,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-data = pd.read_csv("datasets/heart.csv")
-
+# data = pd.read_csv("datasets/heart.csv")
+data = pd.read_csv("datasets/Parkinsson_disease.csv")
+data = data.drop(['name'], axis=1)
 
 # data = data.iloc[1: , :]
 # data = data.drop(['name'], axis=1)
@@ -233,7 +234,7 @@ def get_vs_scikit_forest_size(data, target_feature):
     own = {"acc": [], "recall": [], "precision": [], "f1": [], "time": []}
     scikit = copy.deepcopy(own)
     train, test_arr = train_test_split(data, test_size=0.25)
-    for f_size in [60]:
+    for f_size in [10, 100, 200, 400, 800, 1600]:
         print("curr forest size: " + str(f_size))
         print("own")
         copy_data = train.copy(deep=True)
@@ -307,6 +308,6 @@ def get_vs_scikit_forest_size(data, target_feature):
     return own, scikit
 
 
-print(get_vs_scikit_forest_size(data, "output"))
+print(get_vs_scikit_forest_size(data, "status"))
 # sns.heatmap(multilabel_confusion_matrix(
 # data['quality'], data['predictions']))
