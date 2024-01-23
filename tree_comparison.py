@@ -312,11 +312,11 @@ def get_vs_scikit_forest_size(data, target_feature):
 
 # print(get_vs_scikit_forest_size(data, "status"))
 
-def get_vs_scikit_multi_class(data, target_feature):
+def get_vs_scikit_multi_class(data, target_feature, all_labels):
     own = {"acc": [], "recall": [], "precision": [], "f1": [], "time": []}
     scikit = copy.deepcopy(own)
     train, test_arr = train_test_split(data, test_size=0.25)
-    for f_size in [10, 100, 200, 400, 800]:
+    for f_size in [20]:
         print("curr forest size: " + str(f_size))
         print("own")
         copy_data = train.copy(deep=True)
@@ -375,19 +375,22 @@ def get_vs_scikit_multi_class(data, target_feature):
         print(own, file=f)
         print(scikit, file=f)
 
-        # # plt.figure(1)
+
+
         # plt.title("Scikit")
         # cm_sci = confusion_matrix(test_arr_scikit[target_feature], test_arr_scikit["predictions"])
-        # disp = ConfusionMatrixDisplay(confusion_matrix=cm_sci, display_labels=['5', '6', '7', '4', '8', '3'])
+        # disp = ConfusionMatrixDisplay(confusion_matrix=cm_sci, display_labels=all_labels)
         # disp.plot()
 
-        # plt.figure(2)
-        # plt.title("Nasza implementacja")
-        # cm_our = confusion_matrix(test_arr_own[target_feature], test_arr_own["predictions"])
-        # disp = ConfusionMatrixDisplay(confusion_matrix=cm_our, display_labels=['5', '6', '7', '4', '8', '3'])
-        # disp.plot()
 
-        # plt.show()
+        plt.title("Nasza implementacja")
+        cm_our = confusion_matrix(test_arr_own[target_feature], test_arr_own["predictions"])
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm_our, display_labels=all_labels)
+        disp.plot()
+        
+
+        plt.show()
+
 
     # fig, ax = plt.subplots(1,2)
     # # Heatmap from CM for own
@@ -405,12 +408,21 @@ def get_vs_scikit_multi_class(data, target_feature):
     # plt.show()
     return own, scikit
 
-data = pd.read_csv("datasets/WineQuality.csv")
-data = data.drop(['Id'], axis=1)
+# data = pd.read_csv("datasets/WineQuality.csv")
+# data = data.drop(['Id'], axis=1)
+# print(get_vs_scikit_multi_class(data, "quality",['5', '6', '7', '4', '8', '3']))
 
 
-print(get_vs_scikit_multi_class(data, "quality"))
-# print(data['quality'].unique())
+# data = pd.read_csv("datasets/Date_Fruit_Datasets.csv")
+
+# print(get_vs_scikit_multi_class(data, "Class", ['BERHI', 'DEGLET', 'DOKOL', 'IRAQI', 'ROTANA', 'SAFAVI', 'SOGAY']))
+
+
+data = pd.read_csv("datasets/Rice_MSC_Dataset.csv")
+
+print(get_vs_scikit_multi_class(data, "CLASS", ['Basmati', 'Arborio', 'Jasmine', 'Ipsala', 'Karacadag']))
+
+# print(data['CLASS'].unique())
 
 
 # sns.heatmap(multilabel_confusion_matrix(
