@@ -78,7 +78,7 @@ def get_data_for_max_depth(value):
     return acc, recall, precision, f1, time
 
 
-print(get_data_for_max_depth(13))
+# print(get_data_for_max_depth(13))
 
 
 def get_data_for_min_rows(value):
@@ -87,10 +87,10 @@ def get_data_for_min_rows(value):
     precision = []
     f1 = []
     time = []
-    for i in range(0, 5):
+    for i in range(0, 4):
         copy_data = data.copy(deep=True)
         startTime = datetime.now()
-        rf = RandomForest(forest_size=50, min_rows=value + 2 * i)
+        rf = RandomForest(forest_size=50, min_rows=value + 3 * i)
         rf.fit(copy_data, target_feature="output")
         copy_data["predictions"] = copy_data.apply(rf.predict, axis=1)
         acc.append(
@@ -107,8 +107,8 @@ def get_data_for_min_rows(value):
     return acc, recall, precision, f1, time
 
 
-# 2 4 6 8 10
-# print(get_data_for_min_rows(2))
+# 2 5 8 11
+print(get_data_for_min_rows(2))
 
 
 def get_data_for_split_density(value):
