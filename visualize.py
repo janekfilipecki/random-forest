@@ -330,23 +330,61 @@ secondsInMin = 60
 # fig.show()
 
 
-#WINE_QUALITY - ALL STATS
+# #WINE_QUALITY - ALL STATS
 
-ours = {'acc': [0.5874125874125874, 0.5454545454545454, 0.5524475524475524, 0.5559440559440559, 0.5559440559440559, 0.5594405594405595], 'recall': [0.5874125874125874, 0.5454545454545454, 0.5524475524475524, 0.5559440559440559, 0.5559440559440559, 0.5594405594405595], 'precision': [0.5874125874125874, 0.5454545454545454, 0.5524475524475524, 0.5559440559440559, 0.5559440559440559, 0.5594405594405595], 'f1': [0.5874125874125874, 0.5454545454545454, 0.5524475524475524, 0.5559440559440559, 0.5559440559440559, 0.5594405594405595], 'time': [4.268245, 37.371663, 71.977665, 145.61914, 288.165701, 515.655034]}
-scikit = {'acc': [0.5664335664335665, 0.6188811188811189, 0.6328671328671329, 0.6223776223776224, 0.6153846153846154, 0.6258741258741258], 'recall': [0.5664335664335665, 0.6188811188811189, 0.6328671328671329, 0.6223776223776224, 0.6153846153846154, 0.6258741258741258], 'precision': [0.5664335664335665, 0.6188811188811189, 0.6328671328671329, 0.6223776223776224, 0.6153846153846154, 0.6258741258741258], 'f1': [0.5664335664335665, 0.6188811188811189, 0.6328671328671329, 0.6223776223776224, 0.6153846153846154, 0.6258741258741258], 'time': [0.032576, 0.19203, 0.369319, 0.717848, 1.258061, 2.520701]}
-
-
+# ours = {'acc': [0.5874125874125874, 0.5454545454545454, 0.5524475524475524, 0.5559440559440559, 0.5559440559440559, 0.5594405594405595], 'recall': [0.5874125874125874, 0.5454545454545454, 0.5524475524475524, 0.5559440559440559, 0.5559440559440559, 0.5594405594405595], 'precision': [0.5874125874125874, 0.5454545454545454, 0.5524475524475524, 0.5559440559440559, 0.5559440559440559, 0.5594405594405595], 'f1': [0.5874125874125874, 0.5454545454545454, 0.5524475524475524, 0.5559440559440559, 0.5559440559440559, 0.5594405594405595], 'time': [4.268245, 37.371663, 71.977665, 145.61914, 288.165701, 515.655034]}
+# scikit = {'acc': [0.5664335664335665, 0.6188811188811189, 0.6328671328671329, 0.6223776223776224, 0.6153846153846154, 0.6258741258741258], 'recall': [0.5664335664335665, 0.6188811188811189, 0.6328671328671329, 0.6223776223776224, 0.6153846153846154, 0.6258741258741258], 'precision': [0.5664335664335665, 0.6188811188811189, 0.6328671328671329, 0.6223776223776224, 0.6153846153846154, 0.6258741258741258], 'f1': [0.5664335664335665, 0.6188811188811189, 0.6328671328671329, 0.6223776223776224, 0.6153846153846154, 0.6258741258741258], 'time': [0.032576, 0.19203, 0.369319, 0.717848, 1.258061, 2.520701]}
 
 
 
-# Traces with lines: My vs Scikit 
-x = [10, 100, 200, 400, 800, 1600]
-fig = px.scatter().update_traces(mode="lines+markers+text")
-for i in (ours.keys()):
-    fig.add_trace(go.Scatter(x=x, y=ours[i], name=i, text=np.round(ours[i],3), mode="lines+markers+text",))
-for i in (scikit.keys()):
-    fig.add_trace(go.Scatter(x=x, y=scikit[i], name=i+'_scikit', text=np.round(scikit[i],3), mode="lines+markers+text",))
-# fig = px.scatter(x=x, y=y).update_traces(mode="lines+markers")
-fig.update_traces(textposition='top center')
-fig.update_layout(title='Porównanie metryk w zależności od liczby drzew, Wine_quality.csv', title_x=0.5, font=dict(size=20))
-fig.show()
+
+
+# # Traces with lines: My vs Scikit 
+# x = [10, 100, 200, 400, 800, 1600]
+# fig = px.scatter().update_traces(mode="lines+markers+text")
+# for i in (ours.keys()):
+#     fig.add_trace(go.Scatter(x=x, y=ours[i], name=i, text=np.round(ours[i],3), mode="lines+markers+text",))
+# for i in (scikit.keys()):
+#     fig.add_trace(go.Scatter(x=x, y=scikit[i], name=i+'_scikit', text=np.round(scikit[i],3), mode="lines+markers+text",))
+# # fig = px.scatter(x=x, y=y).update_traces(mode="lines+markers")
+# fig.update_traces(textposition='top center')
+# fig.update_layout(title='Porównanie metryk w zależności od liczby drzew, Wine_quality.csv', title_x=0.5, font=dict(size=20))
+# fig.show()
+
+
+# #DATE_FRUIT - ALL STATS
+
+# ours = {'acc': [0.4222222222222222, 0.4177777777777778, 0.4177777777777778, 0.4088888888888889, 0.41333333333333333], 'recall': [0.4222222222222222, 0.4177777777777778, 0.4177777777777778, 0.4088888888888889, 0.41333333333333333], 'precision': [0.4222222222222222, 0.4177777777777778, 0.4177777777777778, 0.4088888888888889, 0.41333333333333333], 'f1': [0.4222222222222222, 0.4177777777777778, 0.4177777777777778, 0.40888888888888886, 0.41333333333333333], 'time': [4.116531, 35.049399, 69.607565, 137.423045, 264.681592]}
+# scikit = {'acc': [0.7911111111111111, 0.7955555555555556, 0.7911111111111111, 0.8088888888888889, 0.8044444444444444], 'recall': [0.7911111111111111, 0.7955555555555556, 0.7911111111111111, 0.8088888888888889, 0.8044444444444444], 'precision': [0.7911111111111111, 0.7955555555555556, 0.7911111111111111, 0.8088888888888889, 0.8044444444444444], 'f1': [0.7911111111111111, 0.7955555555555557, 0.7911111111111111, 0.8088888888888889, 0.8044444444444445], 'time': [0.023248, 0.165506, 0.326192, 0.648965, 1.285251]}
+
+# # Traces with lines: My vs Scikit 
+# x = [10, 100, 200, 400, 800]
+# fig = px.scatter().update_traces(mode="lines+markers+text")
+# for i in (ours.keys()):
+#     fig.add_trace(go.Scatter(x=x, y=ours[i], name=i, text=np.round(ours[i],3), mode="lines+markers+text",))
+# for i in (scikit.keys()):
+#     fig.add_trace(go.Scatter(x=x, y=scikit[i], name=i+'_scikit', text=np.round(scikit[i],3), mode="lines+markers+text",))
+# # fig = px.scatter(x=x, y=y).update_traces(mode="lines+markers")
+# fig.update_traces(textposition='top center')
+# fig.update_layout(title='Porównanie metryk w zależności od liczby drzew, Date_fruit.csv', title_x=0.5, font=dict(size=20))
+# fig.show()
+
+
+
+# #RICE - ALL STATS
+
+# ours = {'acc': [0.92448, 0.9530666666666666, 0.9621866666666666, 0.9592], 'recall': [0.92448, 0.9530666666666666, 0.9621866666666666, 0.9592], 'precision': [0.92448, 0.9530666666666666, 0.9621866666666666, 0.9592], 'f1': [0.92448, 0.9530666666666666, 0.9621866666666666, 0.9592], 'time': [2.474205, 11.086139, 22.724585, 45.215807]}
+# scikit = {'acc': [0.9691733333333333, 0.9781866666666666, 0.9789333333333333, 0.9800533333333333], 'recall': [0.9691733333333333, 0.9781866666666666, 0.9789333333333333, 0.9800533333333333], 'precision': [0.9691733333333333, 0.9781866666666666, 0.9789333333333333, 0.9800533333333333], 'f1': [0.9691733333333333, 0.9781866666666666, 0.9789333333333333, 0.9800533333333333], 'time': [0.361208, 0.822148, 1.415795, 2.596073]}
+
+
+# # Traces with lines: My vs Scikit 
+# x = [1,5,10,20]
+# fig = px.scatter().update_traces(mode="lines+markers+text")
+# for i in (ours.keys()):
+#     fig.add_trace(go.Scatter(x=x, y=ours[i], name=i, text=np.round(ours[i],3), mode="lines+markers+text",))
+# for i in (scikit.keys()):
+#     fig.add_trace(go.Scatter(x=x, y=scikit[i], name=i+'_scikit', text=np.round(scikit[i],3), mode="lines+markers+text",))
+# # fig = px.scatter(x=x, y=y).update_traces(mode="lines+markers")
+# fig.update_traces(textposition='top center')
+# fig.update_layout(title='Porównanie metryk w zależności od liczby drzew, Rice.csv', title_x=0.5, font=dict(size=20))
+# fig.show()

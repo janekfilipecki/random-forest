@@ -18,9 +18,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-# data = pd.read_csv("datasets/heart.csv")
-data = pd.read_csv("datasets/Parkinsson_disease.csv")
-data = data.drop(['name'], axis=1)
+data = pd.read_csv("datasets/heart.csv")
+# data = pd.read_csv("datasets/Parkinsson_disease.csv")
+# data = data.drop(['name'], axis=1)
 
 # data = data.iloc[1: , :]
 # data = data.drop(['name'], axis=1)
@@ -61,7 +61,7 @@ def get_data_for_max_depth(value):
         print(value - 2 * i)
         copy_data = data.copy(deep=True)
         startTime = datetime.now()
-        rf = RandomForest(forest_size=50, max_depth=value - 2 * i)
+        rf = RandomForest(forest_size=50, selective_pruning=False, max_depth=value - 2 * i)
         rf.fit(copy_data, target_feature="output")
         copy_data["predictions"] = copy_data.apply(rf.predict, axis=1)
         acc.append(
@@ -78,7 +78,7 @@ def get_data_for_max_depth(value):
     return acc, recall, precision, f1, time
 
 
-# print(get_data_for_max_depth(13))
+print(get_data_for_max_depth(13))
 
 
 def get_data_for_min_rows(value):
@@ -418,9 +418,9 @@ def get_vs_scikit_multi_class(data, target_feature, all_labels):
 # print(get_vs_scikit_multi_class(data, "Class", ['BERHI', 'DEGLET', 'DOKOL', 'IRAQI', 'ROTANA', 'SAFAVI', 'SOGAY']))
 
 
-data = pd.read_csv("datasets/Rice_MSC_Dataset.csv")
+# data = pd.read_csv("datasets/Rice_MSC_Dataset.csv")
 
-print(get_vs_scikit_multi_class(data, "CLASS", ['Basmati', 'Arborio', 'Jasmine', 'Ipsala', 'Karacadag']))
+# print(get_vs_scikit_multi_class(data, "CLASS", ['Basmati', 'Arborio', 'Jasmine', 'Ipsala', 'Karacadag']))
 
 # print(data['CLASS'].unique())
 
