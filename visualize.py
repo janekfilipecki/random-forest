@@ -3,7 +3,6 @@ import plotly.express as px
 import numpy as np
 
 secondsInMin = 60
-# Default
 # months = ['Accuracy', 'Recall', 'Precision', 'F1', 'Time']
 # false_data = [0.8613,
 # 0.9454,
@@ -19,20 +18,30 @@ secondsInMin = 60
 # fig.add_trace(go.Bar(
 #     x=months,
 #     y=true_data,
-#     name='True'))
+#     name='True',
+#     text=true_data,
+#     textposition='outside'))
 # fig.add_trace(go.Bar(
 #     x=months,
 #     y=false_data,
-#     name='False'
+#     name='False',
+#     text=false_data,
+#     textposition='outside'
 # ))
+
+# fig.update_layout(barmode='group', xaxis_tickangle=-45)
+# fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+# fig.update_layout(title='Wpływ selective_pruning na wartość parametrów, 50 drzew', title_x=0.5, font=dict(size=20))
+# fig.show()
+
 
 # # Max_depth:
 # months = [13,11,9,7,5,3]
-# acc = np.round([0.8448844884488449, 0.8646864686468647, 0.8679867986798679, 0.8679867986798679, 0.8481848184818482, 0.8415841584158416],3)
-# recall = np.round([0.9515151515151515, 0.9333333333333333, 0.9515151515151515, 0.9515151515151515, 0.9393939393939394, 0.9272727272727272], 3)
-# precision = np.round([0.8010204081632653, 0.8369565217391305, 0.8306878306878307, 0.8306878306878307, 0.8115183246073299, 0.8095238095238095], 3)
-# f1 = np.round([0.8698060941828254, 0.8825214899713467, 0.887005649717514, 0.887005649717514, 0.8707865168539326, 0.864406779661017],3)
-# time= [46.120747, 48.077306, 46.397289, 47.65144, 42.894451, 25.848207]
+# acc = np.round([0.8778877887788779, 0.8844884488448845, 0.8613861386138614, 0.8514851485148515, 0.8712871287128713, 0.8316831683168316],3)
+# recall = np.round([0.9696969696969697, 0.9575757575757575, 0.9393939393939394, 0.9393939393939394, 0.9272727272727272, 0.9212121212121213], 3)
+# precision = np.round([0.8333333333333334, 0.8494623655913979, 0.8288770053475936, 0.8157894736842105, 0.85, 0.8], 3)
+# f1 = np.round([0.896358543417367, 0.9002849002849003, 0.8806818181818181, 0.8732394366197183, 0.8869565217391303, 0.8563380281690142],3)
+# time= [51.518477, 54.186392, 53.878435, 52.667534, 47.306505, 27.867311]
 # time_minutes = np.round([x / secondsInMin for x in time], 3)
 
 # fig = go.Figure()
@@ -75,6 +84,56 @@ secondsInMin = 60
 # fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
 # fig.update_layout(title='Wpływ Max_depth na wartość parametrów, 50 drzew', title_x=0.5, font=dict(size=20))
 # fig.show()
+
+# Min Rows:
+months = [2,5,8,11]
+acc = np.round([0.8547854785478548, 0.8778877887788779, 0.8382838283828383, 0.8514851485148515],3)
+recall = np.round([0.9333333333333333, 0.9757575757575757, 0.9272727272727272, 0.9393939393939394], 3)
+precision = np.round([0.8235294117647058, 0.8298969072164949, 0.8052631578947368, 0.8157894736842105], 3)
+f1 = np.round([0.8749999999999999, 0.8969359331476323, 0.8619718309859155, 0.8732394366197183],3)
+time= [52.041561, 52.062198, 49.554598, 47.584486]
+time_minutes = np.round([x / secondsInMin for x in time], 3)
+
+fig = go.Figure()
+fig.add_trace(go.Bar(
+    x=months,
+    y=acc,
+    name='Accuracy',
+    text=acc,
+    textposition='outside'))
+fig.add_trace(go.Bar(
+    x=months,
+    y=recall,
+    name='Recall',
+    text=recall,
+    textposition='outside'
+))
+fig.add_trace(go.Bar(
+    x=months,
+    y=precision,
+    name='Precision',
+    text=precision,
+    textposition='outside'
+))
+fig.add_trace(go.Bar(
+    x=months,
+    y=f1,
+    name='F1',
+    text=f1,
+    textposition='outside'
+))
+fig.add_trace(go.Bar(
+    x=months,
+    y=time_minutes,
+    name='Time [min]',
+    text=time_minutes,
+    textposition='outside'
+))
+
+fig.update_layout(barmode='group', xaxis_tickangle=-45)
+fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+fig.update_layout(title='Wpływ Min_Rows na wartość parametrów, 50 drzew', title_x=0.5, font=dict(size=20))
+fig.show()
 
 
 
