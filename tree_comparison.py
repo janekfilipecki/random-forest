@@ -7,11 +7,6 @@ from sklearn.metrics import (
 )
 from source.random_forest import RandomForest
 from datetime import datetime
-from sklearn.tree import RandomForestClassifier
-import copy
-
-
-
 # from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import copy
@@ -233,7 +228,8 @@ def get_data_for_feature_bagging(value):
 def get_vs_scikit_forest_size(data, target_feature):
     own = {"acc": [], "recall": [], "precision": [], "f1": [], "time": []}
     scikit = copy.deepcopy(own)
-    for f_size in [10, 20, 50, 100, 200, 500]:
+    # for f_size in [10, 20, 50, 100, 200, 500]:
+    for f_size in [10, 20, 30]:
         print("curr forest size: " + str(f_size))
         print("own")
         copy_data = data.copy(deep=True)
@@ -289,71 +285,6 @@ def get_vs_scikit_forest_size(data, target_feature):
         print(own, file=f)
         print(scikit, file=f)
     return own, scikit
-
-def get_vs_scikit_forest_size(data, target_feature):
-    own = {"acc": [], "recall": [], "precision": [], "f1": [], "time": []}
-    scikit = copy.deepcopy(own)
-    for f_size in [10, 20, 50, 100, 200, 500]:
-        print("curr forest size: " + str(f_size))
-        print("own")
-        copy_data = data.copy(deep=True)
-        startTime = datetime.now()
-        rf = RandomForest(
-            forest_size=f_size, max_features=0.5, min_impurity_treshold=0.3
-        )
-        rf.fit(copy_data, target_feature=target_feature)
-        copy_data["predictions"] = copy_data.apply(rf.predict, axis=1)
-        own["acc"].append(
-            accuracy_score(copy_data[target_feature], copy_data["predictions"])
-        )
-        own["recall"].append(
-            recall_score(copy_data[target_feature], copy_data["predictions"])
-        )
-        own["precision"].append(
-            precision_score(
-                copy_data[target_feature], copy_data["predictions"]
-            )
-        )
-        own["f1"].append(
-            f1_score(copy_data[target_feature], copy_data["predictions"])
-        )
-        own["time"].append((datetime.now() - startTime).total_seconds())
-        print("scikit")
-
-        copy_data = data.copy(deep=True)
-        startTime = datetime.now()
-        rf = RandomForestClassifier(n_estimators=f_size)
-        rf.fit(
-            copy_data.drop(columns=[target_feature]),
-            copy_data[target_feature].values.ravel(),
-        )
-        copy_data["predictions"] = rf.predict(
-            copy_data.drop(columns=[target_feature])
-        )
-        scikit["acc"].append(
-            accuracy_score(copy_data[target_feature], copy_data["predictions"])
-        )
-        scikit["recall"].append(
-            recall_score(copy_data[target_feature], copy_data["predictions"])
-        )
-        scikit["precision"].append(
-            precision_score(
-                copy_data[target_feature], copy_data["predictions"]
-            )
-        )
-        scikit["f1"].append(
-            f1_score(copy_data[target_feature], copy_data["predictions"])
-        )
-        scikit["time"].append((datetime.now() - startTime).total_seconds())
-    with open("own_vs_scikit.txt", "w") as f:
-        print(own, file=f)
-        print(scikit, file=f)
-    return own, scikit
-
-
-print(get_vs_scikit_forest_size(data, "output"))
-# sns.heatmap(multilabel_confusion_matrix(
-# data['quality'], data['predictions']))
 
 
 print(get_vs_scikit_forest_size(data, "output"))
