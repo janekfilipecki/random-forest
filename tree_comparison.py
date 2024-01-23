@@ -12,7 +12,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import copy
 import seaborn as sns
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import numpy as np
 
 
@@ -233,7 +233,7 @@ def get_vs_scikit_forest_size(data, target_feature):
     own = {"acc": [], "recall": [], "precision": [], "f1": [], "time": []}
     scikit = copy.deepcopy(own)
     train, test_arr = train_test_split(data, test_size=0.25)
-    for f_size in [10, 100, 200, 400, 800, 1600]:
+    for f_size in [60]:
         print("curr forest size: " + str(f_size))
         print("own")
         copy_data = train.copy(deep=True)
@@ -290,16 +290,19 @@ def get_vs_scikit_forest_size(data, target_feature):
     with open("own_vs_scikit.txt", "a") as f:
         print(own, file=f)
         print(scikit, file=f)
+    fig, ax = plt.subplots(1,2)
     # Heatmap from CM for own
     sns.heatmap(confusion_matrix(test_arr_own[target_feature],
     test_arr_own["predictions"])/np.sum(confusion_matrix(test_arr_own[target_feature],
     test_arr_own["predictions"])), annot=True,
-                fmt='.2%', cmap='Blues')
+                fmt='.2%', cmap='Blues', ax=ax[0])
     # Heatmap from CM for scikits
     sns.heatmap(confusion_matrix(test_arr_scikit[target_feature],
     test_arr_scikit["predictions"])/np.sum(confusion_matrix(test_arr_scikit[target_feature],
     test_arr_scikit["predictions"])), annot=True,
-                fmt='.2%', cmap='Blues')
+                fmt='.2%', cmap='Blues', ax=ax[1])
+    ax[0].title.set_text("Nasza implementacja")
+    ax[1].title.set_text("Scikit")
     plt.show()
     return own, scikit
 
