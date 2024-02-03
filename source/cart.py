@@ -324,9 +324,11 @@ class Node:
         #         # splits (the left subset was empty). So we decided to split
         #         # the data in the midpoints between consecutive values.
 
-        #         # TODO idk why this is better thatn the previous implementation
+        #         # TODO idk why this is better thatn the previous
+        #         # implementation
         #         # split_values = np.linspace(
-        #         #             min_value, max_value, self._split_search_density
+        #         #             min_value, max_value,
+        #         # self._split_search_density
         #         #         )
         #         # THis shouldn't return invalid split points
 
@@ -343,9 +345,9 @@ class Node:
 
         # return splits
 
-    # Here is the old code that was used to calculate the splits. It is
-    # faulty though, sometimes resultet in splits that are invalid
-    # (the left subset is empty) and it is also very slow.
+        # Here is the old code that was used to calculate the splits. It is
+        # faulty though, sometimes resultet in splits that are invalid
+        # (the left subset is empty) and it is also very slow.
 
         splits = []
         # Remove the target feature from the list of features
